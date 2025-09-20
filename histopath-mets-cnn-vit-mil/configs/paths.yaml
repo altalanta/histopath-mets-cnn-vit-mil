@@ -1,0 +1,61 @@
+# Path configuration for different environments
+
+local:
+  # Data paths
+  data_root: "data"
+  raw_data: "${paths.data_root}/raw"
+  processed_data: "${paths.data_root}/processed"
+  tiles_data: "${paths.data_root}/tiles"
+  bags_data: "${paths.data_root}/bags"
+  
+  # Output paths
+  output_root: "outputs"
+  logs: "logs"
+  checkpoints: "checkpoints"
+  artifacts: "artifacts"
+  visualizations: "viz"
+  
+  # MLflow paths
+  mlflow_tracking_uri: "mlruns"
+  mlflow_artifacts: "mlartifacts"
+  
+  # Cache paths
+  cache_root: ".cache"
+  
+cluster:
+  # Paths for HPC/cluster environments
+  data_root: "/scratch/data/histopath"
+  raw_data: "${paths.data_root}/raw"
+  processed_data: "${paths.data_root}/processed"
+  tiles_data: "${paths.data_root}/tiles"
+  bags_data: "${paths.data_root}/bags"
+  
+  output_root: "/scratch/outputs"
+  logs: "${paths.output_root}/logs"
+  checkpoints: "${paths.output_root}/checkpoints"
+  artifacts: "${paths.output_root}/artifacts"
+  visualizations: "${paths.output_root}/viz"
+  
+  mlflow_tracking_uri: "${paths.output_root}/mlruns"
+  mlflow_artifacts: "${paths.output_root}/mlartifacts"
+  
+  cache_root: "/tmp/histopath_cache"
+
+docker:
+  # Paths for Docker environments
+  data_root: "/workspace/data"
+  raw_data: "${paths.data_root}/raw"
+  processed_data: "${paths.data_root}/processed"
+  tiles_data: "${paths.data_root}/tiles"
+  bags_data: "${paths.data_root}/bags"
+  
+  output_root: "/workspace/outputs"
+  logs: "/workspace/logs"
+  checkpoints: "/workspace/checkpoints"
+  artifacts: "/workspace/artifacts"
+  visualizations: "/workspace/viz"
+  
+  mlflow_tracking_uri: "/workspace/mlruns"
+  mlflow_artifacts: "/workspace/mlartifacts"
+  
+  cache_root: "/tmp/cache"

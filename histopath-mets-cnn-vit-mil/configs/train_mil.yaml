@@ -1,0 +1,38 @@
+# Multiple Instance Learning (MIL) model configuration
+# @package model
+
+name: "mil"
+
+# Instance encoder (backbone)
+encoder:
+  architecture: "resnet18"  # Lighter backbone for MIL
+  pretrained: true
+  freeze_layers: 2
+  output_dim: 512  # Feature dimension
+  dropout: 0.25
+
+# MIL Attention mechanism (Ilse et al. 2018)
+attention:
+  hidden_dim: 256
+  attention_dim: 128
+  gated: true  # Use gated attention
+  dropout: 0.25
+  n_layers: 1
+
+# Classifier head
+classifier:
+  hidden_dims: [256, 128]
+  dropout: 0.5
+  activation: "relu"
+
+# Output configuration  
+num_classes: 1
+output_activation: "sigmoid"
+
+# MIL-specific settings
+mil_pooling: "attention"  # attention, mean, max, lse (log-sum-exp)
+instance_dropout: 0.0  # Dropout applied to instances during training
+
+# Attention visualization
+save_attention: true
+attention_threshold: 0.1  # Minimum attention score for visualization

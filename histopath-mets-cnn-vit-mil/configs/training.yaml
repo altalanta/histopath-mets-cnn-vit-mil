@@ -1,0 +1,93 @@
+# Training configuration
+default:
+  # Optimization
+  optimizer: "adamw"
+  lr: 1e-3
+  weight_decay: 1e-4
+  momentum: 0.9  # For SGD
+  
+  # Learning rate scheduling
+  scheduler:
+    name: "cosine"  # cosine, step, plateau, onecycle
+    max_epochs: 50
+    warmup_epochs: 5
+    min_lr: 1e-6
+    
+  # Step scheduler specific
+  step:
+    step_size: 10
+    gamma: 0.1
+    
+  # Plateau scheduler specific  
+  plateau:
+    patience: 5
+    factor: 0.5
+    threshold: 1e-4
+    
+  # OneCycle scheduler specific
+  onecycle:
+    max_lr: 1e-2
+    pct_start: 0.3
+    
+  # Training parameters
+  max_epochs: 50
+  batch_size: 32
+  accumulate_grad_batches: 1
+  gradient_clip_val: 1.0
+  
+  # Mixed precision training
+  precision: "16-mixed"  # 16, 32, bf16, 16-mixed, bf16-mixed
+  
+  # Loss function
+  loss:
+    name: "bce"  # bce, focal, weighted_bce
+    pos_weight: null  # Computed automatically if null
+    label_smoothing: 0.0
+    
+  # Focal loss specific
+  focal:
+    alpha: 0.25
+    gamma: 2.0
+    
+  # Early stopping
+  early_stopping:
+    monitor: "val_auc"
+    patience: 10
+    mode: "max"
+    min_delta: 1e-4
+    
+  # Model checkpointing
+  checkpoint:
+    monitor: "val_auc"
+    mode: "max"
+    save_top_k: 3
+    save_last: true
+    filename: "epoch={epoch:02d}-val_auc={val_auc:.3f}"
+    
+  # Validation
+  val_check_interval: 1.0
+  check_val_every_n_epoch: 1
+  
+  # Cross-validation
+  cv_folds: 5
+  stratify_patients: true
+  
+  # Class weighting
+  class_weighting:
+    enabled: true
+    method: "inverse_freq"  # inverse_freq, sqrt_inverse_freq, custom
+    
+  # Data loading
+  num_workers: 4
+  pin_memory: true
+  persistent_workers: true
+  
+  # Reproducibility
+  deterministic: true
+  benchmark: false  # Set to true for fixed input sizes
+  
+  # Logging
+  log_every_n_steps: 10
+  
+  # Testing
+  test_after_training: true
