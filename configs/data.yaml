@@ -1,0 +1,128 @@
+# Dataset configuration for CAMELYON16/17
+
+# @package _global_
+camelyon16:
+  dataset_name: "camelyon16"
+  data_dir: "data/processed"
+  tile_dir: "data/tiles"
+  bag_dir: "data/bags"
+  
+  # Image specifications
+  tile_size: 256
+  magnification: 10  # 10x magnification (level 2 typically)
+  overlap: 0  # No overlap between tiles
+  
+  # Tissue detection
+  tissue_mask:
+    method: "otsu"  # otsu, simple_threshold, morphology
+    threshold: 0.8  # For simple threshold method
+    min_tissue_ratio: 0.1  # Minimum tissue content in tile
+  
+  # Data splits
+  splits:
+    train_ratio: 0.7
+    val_ratio: 0.15
+    test_ratio: 0.15
+    stratify_patients: true
+    cv_folds: 5
+  
+  # Data loading
+  batch_size: 32
+  num_workers: 4
+  pin_memory: true
+  persistent_workers: true
+  
+  # Augmentations
+  augmentations:
+    train:
+      horizontal_flip: 0.5
+      vertical_flip: 0.5
+      rotation: 15
+      color_jitter:
+        brightness: 0.1
+        contrast: 0.1
+        saturation: 0.1
+        hue: 0.05
+      gaussian_blur: 0.1
+      normalize:
+        mean: [0.485, 0.456, 0.406]
+        std: [0.229, 0.224, 0.225]
+    
+    val:
+      normalize:
+        mean: [0.485, 0.456, 0.406]
+        std: [0.229, 0.224, 0.225]
+  
+  # Stain normalization (deterministic)
+  stain_norm:
+    method: "none"  # none|macenko|vahadane|reinhard
+    target_path: "data/stain_target.png"
+    random_state: 42
+    cache_stats: true
+    enabled: false
+  
+  # MIL-specific settings
+  mil:
+    min_tiles_per_bag: 50
+    max_tiles_per_bag: 1000
+    sampling_strategy: "random"  # random, grid, attention_guided
+    bag_level_augmentation: true
+
+camelyon17:
+  dataset_name: "camelyon17"
+  data_dir: "data/processed"
+  tile_dir: "data/tiles" 
+  bag_dir: "data/bags"
+  
+  # Similar structure to camelyon16 but different splits
+  tile_size: 256
+  magnification: 10
+  overlap: 0
+  
+  tissue_mask:
+    method: "otsu"
+    threshold: 0.8
+    min_tissue_ratio: 0.1
+  
+  # CAMELYON17 has predefined splits
+  splits:
+    use_predefined: true
+    cv_folds: 5
+  
+  batch_size: 32
+  num_workers: 4
+  pin_memory: true
+  persistent_workers: true
+  
+  augmentations:
+    train:
+      horizontal_flip: 0.5
+      vertical_flip: 0.5
+      rotation: 15
+      color_jitter:
+        brightness: 0.1
+        contrast: 0.1
+        saturation: 0.1
+        hue: 0.05
+      gaussian_blur: 0.1
+      normalize:
+        mean: [0.485, 0.456, 0.406]
+        std: [0.229, 0.224, 0.225]
+    
+    val:
+      normalize:
+        mean: [0.485, 0.456, 0.406]
+        std: [0.229, 0.224, 0.225]
+  
+  stain_norm:
+    method: "none"  # none|macenko|vahadane|reinhard
+    target_path: "data/stain_target.png"
+    random_state: 42
+    cache_stats: true
+    enabled: false
+  
+  mil:
+    min_tiles_per_bag: 50
+    max_tiles_per_bag: 1000
+    sampling_strategy: "random"
+    bag_level_augmentation: true

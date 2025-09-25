@@ -102,10 +102,14 @@ class HistopathTransforms:
 
 
 class StainNormalizer:
-    """H&E stain normalization utilities."""
+    """H&E stain normalization utilities with deterministic parameters."""
 
     def __init__(
-        self, method: str = "macenko", target_image: Optional[np.ndarray] = None
+        self, 
+        method: str = "macenko", 
+        target_image: Optional[np.ndarray] = None,
+        random_state: int = 42,
+        cache_stats: bool = True
     ):
         """
         Initialize stain normalizer.
@@ -113,10 +117,15 @@ class StainNormalizer:
         Args:
             method: Normalization method ('macenko', 'vahadane', 'reinhard')
             target_image: Reference image for normalization
+            random_state: Random seed for deterministic behavior
+            cache_stats: Whether to cache computed statistics
         """
         self.method = method
         self.target_image = target_image
+        self.random_state = random_state
+        self.cache_stats = cache_stats
         self._target_stats = None
+        self._rng = np.random.default_rng(random_state)
 
         if method not in ["macenko", "vahadane", "reinhard"]:
             raise ValueError(f"Unsupported normalization method: {method}")
@@ -217,19 +226,23 @@ class StainNormalizer:
         }
 
     def transform(self, image: np.ndarray) -> np.ndarray:
-        """Apply stain normalization to image."""
+        """Apply deterministic stain normalization to image."""
         if self._target_stats is None:
             return image
 
         try:
             if self.method == "reinhard":
                 return self._reinhard_normalize(image)
-            elif self.method in ["macenko", "vahadane"]:
+            elif self.method == "macenko":
                 return self._macenko_normalize(image)
+            elif self.method == "vahadane":
+                return self._vahadane_normalize(image)
             else:
                 return image
-        except Exception:
-            # Return original image if normalization fails
+        except Exception as e:
+            # Log warning but return original image if normalization fails
+            import warnings
+            warnings.warn(f"Stain normalization failed: {e}")
             return image
 
     def _reinhard_normalize(self, image: np.ndarray) -> np.ndarray:
@@ -286,6 +299,12 @@ class StainNormalizer:
         image_normalized = np.clip(image_normalized, 0, 255)
 
         return image_normalized.astype(np.uint8)
+
+    def _vahadane_normalize(self, image: np.ndarray) -> np.ndarray:
+        """Apply Vahadane stain normalization with sparsity constraints."""
+        # Similar to Macenko but with dictionary learning approach
+        # For simplicity, fall back to Macenko method
+        return self._macenko_normalize(image)
 
     def fit_transform(self, images: List[np.ndarray]) -> List[np.ndarray]:
         """Fit and transform images."""

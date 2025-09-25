@@ -1,0 +1,39 @@
+# Main Hydra configuration
+defaults:
+  - data: camelyon16
+  - model: mil
+  - training: default
+  - paths: local
+  - _self_
+
+# Experiment tracking
+experiment:
+  name: "histopath_experiment"
+  notes: "Baseline experiment"
+  tags: []
+
+# Random seed for reproducibility
+seed: 42
+
+# Device configuration
+device: "auto"  # auto, cpu, cuda
+
+# Logging configuration
+logging:
+  level: INFO
+  log_dir: logs
+  
+# MLflow configuration  
+mlflow:
+  experiment_name: "histopath_mets_detection"
+  tracking_uri: "mlruns"
+  log_model: true
+  log_artifacts: true
+
+# Hydra configuration
+hydra:
+  run:
+    dir: outputs/${now:%Y-%m-%d_%H-%M-%S}
+  sweep:
+    dir: multirun/${now:%Y-%m-%d_%H-%M-%S}
+    subdir: ${hydra.job.num}
