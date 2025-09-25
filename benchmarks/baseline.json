@@ -1,0 +1,6 @@
+{
+  "steps_per_sec": 12.5,
+  "last_updated": "2024-01-01T00:00:00Z",
+  "hardware": "CPU-only baseline",
+  "notes": "Initial baseline for CI performance tests"
+}

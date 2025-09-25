@@ -1,0 +1,74 @@
+# Evaluation configuration
+
+# Which split to evaluate on
+split: "test"  # train, val, test
+
+# Metrics to compute
+metrics:
+  - "auc"
+  - "accuracy" 
+  - "precision"
+  - "recall"
+  - "f1"
+  - "specificity"
+  - "sensitivity"
+  - "auprc"
+
+# Threshold selection
+thresholds:
+  methods:
+    - "youden_j"  # Youden's J statistic
+    - "closest_to_topleft"  # Closest to (0,1) on ROC curve
+    - "f1_optimal"  # Maximize F1 score
+    - "precision_recall_break_even"  # P=R point
+  custom_thresholds: [0.3, 0.5, 0.7, 0.9]
+  
+# Clinical thresholds
+clinical:
+  high_sensitivity: 0.95  # 95% sensitivity threshold
+  high_specificity: 0.95  # 95% specificity threshold
+
+# Calibration analysis
+calibration:
+  enabled: true
+  n_bins: 10
+  methods:
+    - "reliability_diagram"
+    - "ece"  # Expected Calibration Error
+    - "mce"  # Maximum Calibration Error
+    - "brier_score"
+  
+# Bootstrap confidence intervals
+bootstrap:
+  enabled: true
+  n_bootstrap: 1000
+  confidence_level: 0.95
+  seed: 42
+
+# Per-group analysis (if metadata available)
+group_analysis:
+  enabled: true
+  groups:
+    - "hospital"
+    - "scanner"
+    - "age_group"
+    - "tumor_size"
+
+# Save predictions and attention maps
+save_outputs:
+  predictions: true
+  attention_maps: true
+  grad_cam: true
+  output_dir: "eval_outputs"
+
+# Visualization
+visualization:
+  save_plots: true
+  plot_types:
+    - "roc_curve"
+    - "precision_recall_curve"
+    - "calibration_plot"
+    - "confusion_matrix"
+    - "threshold_curves"
+  plot_format: "png"  # png, pdf, svg
+  dpi: 300

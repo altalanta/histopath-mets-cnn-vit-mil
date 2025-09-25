@@ -1,0 +1,27 @@
+# CNN model configuration
+# @package model
+
+name: "cnn"
+architecture: "resnet50"
+
+# Backbone configuration
+backbone:
+  pretrained: true
+  freeze_layers: 0  # Number of layers to freeze (0 = train all)
+  dropout: 0.2
+
+# Classification head
+classifier:
+  hidden_dims: [512, 256]
+  dropout: 0.3
+  activation: "relu"
+
+# Slide-level aggregation
+aggregation:
+  method: "attention"  # mean, max, attention
+  attention_dim: 256
+  n_attention_layers: 1
+
+# Output configuration
+num_classes: 1  # Binary classification
+output_activation: "sigmoid"

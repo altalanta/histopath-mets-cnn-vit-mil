@@ -1,0 +1,44 @@
+# Vision Transformer (ViT) model configuration
+# @package model
+
+name: "vit"
+architecture: "vit_base_patch16_224"
+
+# ViT backbone configuration
+backbone:
+  pretrained: true
+  img_size: 224
+  patch_size: 16
+  embed_dim: 768
+  depth: 12
+  num_heads: 12
+  mlp_ratio: 4.0
+  dropout: 0.1
+  attention_dropout: 0.1
+
+# Feature extraction
+feature_extraction:
+  layer: "pre_logits"  # Which layer to extract features from
+  pool: "cls_token"  # cls_token, global_avg_pool
+
+# Classification head
+classifier:
+  hidden_dims: [512, 256]
+  dropout: 0.3
+  activation: "gelu"
+
+# Slide-level aggregation
+aggregation:
+  method: "attention"  # mean, max, attention
+  attention_dim: 256
+  n_attention_layers: 2
+
+# Output configuration
+num_classes: 1
+output_activation: "sigmoid"
+
+# ViT-specific training settings
+training_overrides:
+  lr: 1e-4  # Lower learning rate for ViT
+  warmup_epochs: 5
+  layer_decay: 0.75  # Layer-wise learning rate decay
