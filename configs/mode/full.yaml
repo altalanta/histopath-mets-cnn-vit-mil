@@ -1,0 +1,33 @@
+data:
+  synthetic:
+    splits:
+      train: 8192
+      val: 2048
+    shards:
+      samples_per_shard: 512
+    augment:
+      color_jitter: 0.2
+      blur_prob: 0.3
+      rotation: 20
+training:
+  simclr:
+    epochs: 50
+    batch_size: 256
+    num_workers: 8
+  clip:
+    epochs: 30
+    batch_size: 256
+    num_workers: 8
+    projection_dim: 256
+    image_encoder:
+      hidden_dim: 1024
+    omics_encoder:
+      hidden_dim: 512
+evaluation:
+  retrieval:
+    bootstrap_samples: 512
+    umap:
+      n_neighbors: 20
+      min_dist: 0.05
+logging:
+  throughput_interval: 50

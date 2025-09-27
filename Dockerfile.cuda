@@ -1,0 +1,25 @@
+# syntax=docker/dockerfile:1
+
+FROM pytorch/pytorch:2.1.0-cuda11.8-cudnn8-runtime AS builder
+WORKDIR /app
+COPY pyproject.toml README.md LICENSE bandit-baseline.json /app/
+COPY src /app/src
+COPY configs /app/configs
+COPY docs /app/docs
+RUN pip install --upgrade pip build && \
+    python -m build --wheel
+
+FROM pytorch/pytorch:2.1.0-cuda11.8-cudnn8-runtime AS runtime
+ENV PYTHONUNBUFFERED=1
+WORKDIR /workspace
+COPY --from=builder /app/dist/*.whl /tmp/histo-omics-lite.whl
+RUN useradd --create-home --shell /bin/bash appuser && \
+    pip install --upgrade pip && \
+    pip install /tmp/histo-omics-lite.whl[cuda,viz] && \
+    rm -f /tmp/histo-omics-lite.whl
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
+USER appuser
+ENTRYPOINT ["histo-omics-lite"]
+CMD ["--help"]
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 CMD histo-omics-lite --help > /dev/null || exit 1
