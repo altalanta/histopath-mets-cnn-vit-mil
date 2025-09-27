@@ -1,0 +1,82 @@
+defaults:
+  - mode: fast_debug
+  - _self_
+
+seed: 0
+device: auto
+
+paths:
+  synthetic_root: data/synthetic
+  runs_root: runs
+  reports_root: reports
+  embeddings_root: embeddings
+
+profiling:
+  enabled: false
+  activities: [cpu]
+  schedule: wait
+
+logging:
+  throughput_interval: 25
+
+data:
+  synthetic:
+    splits:
+      train: 2048
+      val: 512
+    shards:
+      samples_per_shard: 256
+      compression: null
+    image:
+      size: 128
+      channels: 3
+    omics:
+      dim: 64
+      classes: 4
+      class_separation: 2.0
+      noise: 0.25
+    augment:
+      color_jitter: 0.1
+      blur_prob: 0.15
+      rotation: 10
+
+training:
+  simclr:
+    epochs: 10
+    batch_size: 128
+    base_learning_rate: 1.0e-3
+    weight_decay: 1.0e-4
+    temperature: 0.2
+    projection_dim: 128
+    hidden_dim: 512
+    num_workers: 4
+    checkpoint_every: 1
+    log_interval: 25
+  clip:
+    epochs: 10
+    batch_size: 128
+    base_learning_rate: 5.0e-4
+    weight_decay: 1.0e-4
+    temperature: 0.07
+    projection_dim: 128
+    image_encoder:
+      hidden_dim: 512
+    omics_encoder:
+      hidden_dim: 256
+    num_workers: 4
+    checkpoint_every: 1
+    log_interval: 25
+
+evaluation:
+  retrieval:
+    neighbors: [1, 5]
+    bootstrap_samples: 200
+    confidence_level: 0.95
+    num_bootstrap_workers: 0
+    umap:
+      n_neighbors: 15
+      min_dist: 0.1
+      metric: cosine
+    gradcam:
+      top_k: 4
+      layer: default

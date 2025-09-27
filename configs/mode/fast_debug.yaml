@@ -1,0 +1,31 @@
+data:
+  synthetic:
+    splits:
+      train: 256
+      val: 64
+    shards:
+      samples_per_shard: 64
+training:
+  simclr:
+    epochs: 2
+    batch_size: 64
+    num_workers: 0
+    log_interval: 10
+  clip:
+    epochs: 2
+    batch_size: 32
+    num_workers: 0
+    log_interval: 10
+    projection_dim: 64
+    image_encoder:
+      hidden_dim: 256
+    omics_encoder:
+      hidden_dim: 128
+evaluation:
+  retrieval:
+    bootstrap_samples: 32
+    umap:
+      n_neighbors: 8
+      min_dist: 0.2
+logging:
+  throughput_interval: 10
