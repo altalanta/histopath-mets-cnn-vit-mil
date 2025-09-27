@@ -1,0 +1,38 @@
+site_name: Histo-Omics Lite
+site_url: https://altalanta.github.io/histo-omics-lite/
+repo_url: https://github.com/altalanta/histo-omics-lite
+repo_name: altalanta/histo-omics-lite
+
+nav:
+  - Home: index.md
+  - Install: install.md
+  - Quickstart: quickstart.md
+  - Data Pipeline: data-pipeline.md
+  - Configs: configs.md
+  - CLI Reference: cli.md
+  - Troubleshooting: troubleshooting.md
+  - Model Card: model-card.md
+  - Bring Your Own Data: bring-your-own-data.md
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.sections
+    - toc.integrate
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - admonition
+  - codehilite
+  - footnotes
+  - pymdownx.superfences
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: false
